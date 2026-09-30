@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+  <defs>
+    <radialGradient id="soundGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0a0b10" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sphereCore" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="40%" stop-color="#6366f1"/>
+      <stop offset="80%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </radialGradient>
+    <linearGradient id="metalRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="50%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <filter id="holoGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Ambient Acoustic Field Glow -->
+  <circle cx="300" cy="300" r="260" fill="url(#soundGlow)"/>
+
+  <!-- Speaker Shadow -->
+  <ellipse cx="300" cy="490" rx="160" ry="20" fill="#000" opacity="0.6"/>
+
+  <!-- Sound Waves Ripple Ripples -->
+  <circle cx="300" cy="300" r="210" fill="none" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="8 12" opacity="0.3" filter="url(#holoGlow)"/>
+  <circle cx="300" cy="300" r="180" fill="none" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="6 10" opacity="0.4"/>
+
+  <!-- Solid Metal Audio Base Stand -->
+  <ellipse cx="300" cy="440" rx="120" ry="30" fill="url(#metalRing)" stroke="#334155" stroke-width="2"/>
+  <rect x="260" y="380" width="80" height="60" rx="10" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Outer Floating Glass Sphere Dome -->
+  <circle cx="300" cy="280" r="140" fill="#0c1122" fill-opacity="0.4" stroke="#38bdf8" stroke-width="2" opacity="0.9"/>
+
+  <!-- Glowing Internal Acoustic Core / Ferrofluid Visualizer Sphere -->
+  <circle cx="300" cy="280" r="90" fill="url(#sphereCore)" filter="url(#holoGlow)"/>
+  
+  <!-- Ferrofluid Spike Accents / Dynamic Waveforms inside -->
+  <path d="M 300 190 Q 320 230 360 250 Q 390 280 370 320 Q 330 370 300 370 Q 270 370 230 320 Q 210 280 240 250 Q 280 230 300 190 Z" 
+        fill="#ffffff" opacity="0.3" filter="url(#holoGlow)"/>
+
+  <!-- Core Specular Light Highlight -->
+  <ellipse cx="265" cy="235" rx="35" ry="20" fill="#ffffff" opacity="0.6" transform="rotate(-30, 265, 235)"/>
+  
+  <!-- Outer Sphere Glass Reflection -->
+  <path d="M 200 200 C 230 160, 280 145, 340 155" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" opacity="0.5"/>
+
+  <!-- 360 Spatial EQ Audio Bands -->
+  <ellipse cx="300" cy="280" rx="135" ry="40" fill="none" stroke="#06b6d4" stroke-width="2" stroke-dasharray="4 8" opacity="0.8" filter="url(#holoGlow)" transform="rotate(-15, 300, 280)"/>
+  <ellipse cx="300" cy="280" rx="135" ry="40" fill="none" stroke="#a855f7" stroke-width="2" stroke-dasharray="4 8" opacity="0.8" filter="url(#holoGlow)" transform="rotate(25, 300, 280)"/>
+
+  <!-- Capacitive Top Touch Controls -->
+  <circle cx="300" cy="140" r="16" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+  <text x="300" y="145" fill="#38bdf8" font-size="14" font-weight="bold" font-family="sans-serif" text-anchor="middle">∞</text>
+</svg>

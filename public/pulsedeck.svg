@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#0a0b10" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e2235"/>
+      <stop offset="50%" stop-color="#11131f"/>
+      <stop offset="100%" stop-color="#0c0d17"/>
+    </linearGradient>
+    <linearGradient id="screenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090a14"/>
+      <stop offset="100%" stop-color="#020307"/>
+    </linearGradient>
+    <linearGradient id="accentCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="accentPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Ambient Glow -->
+  <circle cx="300" cy="300" r="260" fill="url(#bgGlow)"/>
+
+  <!-- Console Chassis Base -->
+  <g transform="translate(0, 20)">
+    <!-- Shadow -->
+    <ellipse cx="300" cy="460" rx="220" ry="24" fill="#000" opacity="0.6"/>
+
+    <!-- Main Handheld Body with ergonomic curves -->
+    <path d="M 120 180 
+             C 70 200, 50 280, 60 360 
+             C 65 400, 100 420, 150 410 
+             C 200 400, 250 405, 300 405 
+             C 350 405, 400 400, 450 410 
+             C 500 420, 535 400, 540 360 
+             C 550 280, 530 200, 480 180 
+             C 440 165, 380 170, 300 170 
+             C 220 170, 160 165, 120 180 Z" 
+          fill="url(#bodyGrad)" stroke="#2e354f" stroke-width="3"/>
+
+    <!-- Cyberpunk Grip Texture Accents -->
+    <path d="M 80 250 C 75 300, 80 340, 95 380" stroke="#06b6d4" stroke-width="3" fill="none" opacity="0.8" filter="url(#neonGlow)"/>
+    <path d="M 520 250 C 525 300, 520 340, 505 380" stroke="#c084fc" stroke-width="3" fill="none" opacity="0.8" filter="url(#neonGlow)"/>
+
+    <!-- Screen Bezel -->
+    <rect x="175" y="195" width="250" height="175" rx="12" fill="#0b0d18" stroke="#1f2438" stroke-width="2"/>
+    
+    <!-- OLED Screen Surface -->
+    <rect x="183" y="203" width="234" height="159" rx="8" fill="url(#screenGrad)"/>
+    
+    <!-- Screen Game UI Graphic -->
+    <g opacity="0.95">
+      <!-- Grid Cyber Horizon -->
+      <line x1="183" y1="290" x2="417" y2="290" stroke="#06b6d4" stroke-width="1.5" opacity="0.6"/>
+      <line x1="200" y1="360" x2="280" y2="290" stroke="#06b6d4" stroke-width="1" opacity="0.4"/>
+      <line x1="400" y1="360" x2="320" y2="290" stroke="#06b6d4" stroke-width="1" opacity="0.4"/>
+      <line x1="300" y1="360" x2="300" y2="290" stroke="#06b6d4" stroke-width="1" opacity="0.4"/>
+      
+      <!-- Neon Sun -->
+      <circle cx="300" cy="270" r="28" fill="url(#accentPurple)" opacity="0.85" filter="url(#neonGlow)"/>
+      
+      <!-- HUD Text and Status -->
+      <text x="195" y="224" fill="#06b6d4" font-size="9" font-family="sans-serif" font-weight="bold" letter-spacing="1">NEXUS OS // 144Hz</text>
+      <text x="375" y="224" fill="#10b981" font-size="9" font-family="sans-serif" font-weight="bold">98% ⚡</text>
+      <rect x="195" y="235" width="45" height="4" rx="2" fill="#06b6d4"/>
+      <rect x="195" y="242" width="25" height="3" rx="1.5" fill="#c084fc"/>
+    </g>
+
+    <!-- Glass Glare on Screen -->
+    <polygon points="183,203 320,203 230,362 183,362" fill="white" opacity="0.04"/>
+
+    <!-- Left Controller Controls -->
+    <!-- D-Pad -->
+    <g transform="translate(118, 230)">
+      <circle cx="20" cy="20" r="28" fill="#151827" stroke="#252b42" stroke-width="1.5"/>
+      <path d="M 14 6 H 26 V 14 H 34 V 26 H 26 V 34 H 14 V 26 H 6 V 14 H 14 Z" fill="#2d3550" stroke="#414c72" stroke-width="1"/>
+      <circle cx="20" cy="20" r="3" fill="#151827"/>
+    </g>
+    <!-- Left Thumbstick with RGB Ring -->
+    <g transform="translate(112, 310)">
+      <circle cx="25" cy="25" r="22" fill="none" stroke="#06b6d4" stroke-width="2" filter="url(#neonGlow)" opacity="0.9"/>
+      <circle cx="25" cy="25" r="20" fill="#191d2d" stroke="#2b334e" stroke-width="2"/>
+      <circle cx="23" cy="23" r="14" fill="#0e101a" stroke="#3b466b" stroke-width="1.5"/>
+      <!-- Thumb Grip Ridges -->
+      <circle cx="23" cy="23" r="4" fill="none" stroke="#06b6d4" stroke-width="1.5"/>
+    </g>
+
+    <!-- Right Controller Controls -->
+    <!-- Action Buttons (A, B, X, Y) -->
+    <g transform="translate(440, 222)">
+      <circle cx="30" cy="12" r="7" fill="#1e2337" stroke="#384366" stroke-width="1.5"/>
+      <text x="30" y="15" fill="#06b6d4" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">Y</text>
+      
+      <circle cx="48" cy="30" r="7" fill="#1e2337" stroke="#384366" stroke-width="1.5"/>
+      <text x="48" y="33" fill="#ef4444" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">B</text>
+      
+      <circle cx="30" cy="48" r="7" fill="#1e2337" stroke="#384366" stroke-width="1.5"/>
+      <text x="30" y="51" fill="#10b981" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">A</text>
+      
+      <circle cx="12" cy="30" r="7" fill="#1e2337" stroke="#384366" stroke-width="1.5"/>
+      <text x="12" y="33" fill="#3b82f6" font-size="8" font-weight="bold" text-anchor="middle" font-family="sans-serif">X</text>
+    </g>
+    <!-- Right Thumbstick with RGB Ring -->
+    <g transform="translate(438, 310)">
+      <circle cx="25" cy="25" r="22" fill="none" stroke="#c084fc" stroke-width="2" filter="url(#neonGlow)" opacity="0.9"/>
+      <circle cx="25" cy="25" r="20" fill="#191d2d" stroke="#2b334e" stroke-width="2"/>
+      <circle cx="27" cy="23" r="14" fill="#0e101a" stroke="#3b466b" stroke-width="1.5"/>
+      <circle cx="27" cy="23" r="4" fill="none" stroke="#c084fc" stroke-width="1.5"/>
+    </g>
+
+    <!-- Top Triggers (Shoulder Buttons) -->
+    <path d="M 120 180 C 130 160, 170 160, 185 170" fill="none" stroke="#3b466b" stroke-width="6" stroke-linecap="round"/>
+    <path d="M 480 180 C 470 160, 430 160, 415 170" fill="none" stroke="#3b466b" stroke-width="6" stroke-linecap="round"/>
+
+    <!-- Speaker Grills -->
+    <g fill="#252b42">
+      <circle cx="165" cy="290" r="2"/>
+      <circle cx="165" cy="300" r="2"/>
+      <circle cx="165" cy="310" r="2"/>
+      
+      <circle cx="435" cy="290" r="2"/>
+      <circle cx="435" cy="300" r="2"/>
+      <circle cx="435" cy="310" r="2"/>
+    </g>
+  </g>
+</svg>

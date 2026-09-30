@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+  <defs>
+    <radialGradient id="phoneGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#0a0b10" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="phoneBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a2e45"/>
+      <stop offset="50%" stop-color="#141724"/>
+      <stop offset="100%" stop-color="#090a12"/>
+    </linearGradient>
+    <linearGradient id="phoneScreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#060814"/>
+      <stop offset="100%" stop-color="#020307"/>
+    </linearGradient>
+    <linearGradient id="phoneCamLens" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <filter id="phoneNeon" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <circle cx="300" cy="300" r="260" fill="url(#phoneGlow)"/>
+  <ellipse cx="300" cy="520" rx="160" ry="18" fill="#000" opacity="0.6"/>
+
+  <g transform="translate(0, -10)">
+    <!-- Dual Phone Display (Angled Front + Back Preview) -->
+    
+    <!-- Phone Back View (Left Angled) -->
+    <g transform="translate(140, 110)">
+      <rect x="0" y="0" width="160" height="340" rx="28" fill="url(#phoneBody)" stroke="#475569" stroke-width="2"/>
+      
+      <!-- Quad Camera Island -->
+      <rect x="15" y="18" width="65" height="120" rx="18" fill="#0c0e18" stroke="#334155" stroke-width="2"/>
+      
+      <!-- Main 200MP Lens -->
+      <circle cx="47" cy="45" r="16" fill="#1e293b" stroke="#06b6d4" stroke-width="2"/>
+      <circle cx="47" cy="45" r="10" fill="url(#phoneCamLens)" filter="url(#phoneNeon)"/>
+      <circle cx="47" cy="45" r="4" fill="#05070d"/>
+      <circle cx="44" cy="42" r="2" fill="#fff" opacity="0.8"/>
+
+      <!-- Periscope Telephoto Lens -->
+      <circle cx="47" cy="85" r="14" fill="#1e293b" stroke="#a855f7" stroke-width="2"/>
+      <circle cx="47" cy="85" r="8" fill="url(#phoneCamLens)"/>
+      <circle cx="47" cy="85" r="3" fill="#05070d"/>
+
+      <!-- Ultra-Wide Lens & LiDAR -->
+      <circle cx="47" cy="118" r="7" fill="#1e293b"/>
+      <circle cx="47" cy="118" r="4" fill="#06b6d4"/>
+
+      <!-- LED True-Tone Flash -->
+      <circle cx="68" cy="65" r="5" fill="#fef08a" filter="url(#phoneNeon)"/>
+
+      <!-- Nexus Minimalist Brand Emblem -->
+      <text x="80" y="240" fill="#64748b" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle" letter-spacing="3">NEXUS</text>
+    </g>
+
+    <!-- Phone Front View (Right Angled & Prominent) -->
+    <g transform="translate(280, 90)">
+      <rect x="0" y="0" width="180" height="370" rx="30" fill="#0b0e18" stroke="#38bdf8" stroke-width="2.5" filter="url(#phoneNeon)"/>
+      
+      <!-- Bezel-less Dynamic AMOLED Screen -->
+      <rect x="6" y="6" width="168" height="358" rx="24" fill="url(#phoneScreen)"/>
+
+      <!-- Vibrant Screen Wallpaper -->
+      <g opacity="0.95">
+        <circle cx="90" cy="180" r="65" fill="url(#phoneCamLens)" filter="url(#phoneNeon)" opacity="0.75"/>
+        <path d="M 10 260 Q 90 180 170 280 L 170 360 L 10 360 Z" fill="#0c1122" opacity="0.9"/>
+        
+        <!-- Lockscreen / Home Screen UI -->
+        <text x="90" y="80" fill="#ffffff" font-size="28" font-weight="bold" font-family="sans-serif" text-anchor="middle">10:42</text>
+        <text x="90" y="100" fill="#94a3b8" font-size="10" font-family="sans-serif" text-anchor="middle">Wednesday, Aug 19 • 24°C</text>
+
+        <!-- Dynamic Pill Island Bar at Top -->
+        <rect x="65" y="14" width="50" height="12" rx="6" fill="#000000"/>
+        <circle cx="73" cy="20" r="2.5" fill="#06b6d4"/>
+      </g>
+
+      <!-- Glass Specular Highlight -->
+      <polygon points="6,6 100,6 40,360 6,360" fill="#ffffff" opacity="0.05"/>
+    </g>
+  </g>
+</svg>

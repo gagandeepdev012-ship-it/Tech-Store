@@ -25,7 +25,7 @@ export default function CartDrawer({
   );
 
   let discountAmount = 0;
-  if (appliedPromo === 'NEXUS30') {
+  if (appliedPromo === 'TECH30' || appliedPromo === 'NEXUS30') {
     discountAmount = Math.round(cartSubtotal * 0.3); // 30% off
   }
 
@@ -35,7 +35,7 @@ export default function CartDrawer({
   const handleApplyPromoSubmit = (e) => {
     e.preventDefault();
     const cleanPromo = promoInput.trim().toUpperCase();
-    if (cleanPromo === 'NEXUS30' || cleanPromo === 'FREESHIP') {
+    if (cleanPromo === 'TECH30' || cleanPromo === 'NEXUS30' || cleanPromo === 'FREESHIP') {
       onApplyPromo(cleanPromo);
       setPromoInput('');
       setPromoError('');
@@ -133,7 +133,7 @@ export default function CartDrawer({
             <form onSubmit={handleApplyPromoSubmit} className="promo-form">
               <input 
                 type="text" 
-                placeholder="PROMO CODE (e.g. NEXUS30)" 
+                placeholder="PROMO CODE (e.g. TECH30)" 
                 value={promoInput}
                 onChange={(e) => setPromoInput(e.target.value)}
                 disabled={!!appliedPromo}

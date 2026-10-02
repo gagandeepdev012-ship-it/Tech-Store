@@ -221,7 +221,7 @@ export default function CheckoutWizard({ cartItems, cartTotal, discountAmount, f
             <button onClick={() => setShowOtpNotification(false)}>×</button>
           </div>
           <p className="sms-body">
-            Use code <strong>{codOtp}</strong> to verify your Cash on Delivery order for NEXUS Tech Store. Do not share this OTP.
+            Use code <strong>{codOtp}</strong> to verify your Cash on Delivery order for TECH STORE. Do not share this OTP.
           </p>
         </div>
       )}

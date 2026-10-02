@@ -8,6 +8,20 @@ import CartDrawer from './CartDrawer';
 import CheckoutWizard from './CheckoutWizard';
 import { formatINR } from './utils';
 
+const CATEGORY_ICONS = {
+  'All': '⚡',
+  'Computers': '🖥️',
+  'Laptops': '💻',
+  'Mobile': '📱',
+  'Audio': '🎧',
+  'Wearables': '⌚',
+  'Gaming': '🎮',
+  'Drones': '🚁',
+  'Smart Home': '📺',
+  'Appliances': '❄️',
+  'Gadgets': '🔋'
+};
+
 export default function App() {
   // --- STATE ---
   const [products] = useState(productsData);
@@ -22,8 +36,9 @@ export default function App() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearchDropdown, setShowSearchDropdown] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('All'); // 'All', 'Laptops', 'Mobile', 'Audio', 'Wearables', 'Wishlist'
-  const [sortBy, setSortBy] = useState('featured'); // 'featured', 'price-asc', 'price-desc', 'rating'
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [sortBy, setSortBy] = useState('featured');
+  const [priceFilter, setPriceFilter] = useState('all'); // 'all', 'under30k', '30k-100k', 'above100k'
   
   const [cart, setCart] = useState([]);
   const [wishlist, setWishlist] = useState([]);
@@ -34,9 +49,19 @@ export default function App() {
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const [isCheckoutMode, setIsCheckoutMode] = useState(false);
   const [appliedPromo, setAppliedPromo] = useState(null);
-  const [isLightTheme, setIsLightTheme] = useState(false);
+  const [isLightTheme, setIsLightTheme] = useState(true);
+  const [promoCopied, setPromoCopied] = useState(false);
 
-  // --- ACTIONS ---
+  // Spotlight featured products in hero
+  const spotlightProducts = products.filter(p => [1, 12, 14, 15, 6].includes(p.id));
+  const [spotlightIndex, setSpotlightIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSpotlightIndex((prev) => (prev + 1) % spotlightProducts.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [spotlightProducts.length]);
 
   // Theme Toggle
   const toggleTheme = () => {
@@ -55,8 +80,6 @@ export default function App() {
   // Cart Management
   const handleAddToCart = (configuredItem) => {
     setCart((prevCart) => {
-      // If adding a configured item from details modal, it has a cartId.
-      // If quick-adding from card, generate a standard cartId.
       const cartId = configuredItem.cartId || `${configuredItem.id}-0-0`;
       const existingIndex = prevCart.findIndex((item) => item.cartId === cartId);
       
@@ -78,7 +101,6 @@ export default function App() {
         ];
       }
     });
-    // Trigger sliding drawer open automatically when item is added! (Good UX)
     setIsCartOpen(true);
   };
 
@@ -104,6 +126,12 @@ export default function App() {
     setAppliedPromo(null);
   };
 
+  const handleCopyPromo = () => {
+    navigator.clipboard?.writeText('TECH30');
+    setPromoCopied(true);
+    setTimeout(() => setPromoCopied(false), 2000);
+  };
+
   // Wishlist
   const handleToggleWishlist = (productId) => {
     setWishlist((prev) =>
@@ -118,7 +146,7 @@ export default function App() {
       if (exists) {
         return prev.filter((p) => p.id !== product.id);
       } else {
-        if (prev.length >= 3) return prev; // Limit comparison to 3 items
+        if (prev.length >= 3) return prev;
         return [...prev, product];
       }
     });
@@ -150,7 +178,7 @@ export default function App() {
   );
 
   let discountAmount = 0;
-  if (appliedPromo === 'NEXUS30') {
+  if (appliedPromo === 'TECH30' || appliedPromo === 'NEXUS30') {
     discountAmount = Math.round(cartSubtotal * 0.3);
   }
 
@@ -166,7 +194,12 @@ export default function App() {
       if (product.category !== selectedCategory) return false;
     }
 
-    // 2. Search query filter
+    // 2. Price Range Filter
+    if (priceFilter === 'under30k' && product.price >= 30000) return false;
+    if (priceFilter === '30k-100k' && (product.price < 30000 || product.price > 100000)) return false;
+    if (priceFilter === 'above100k' && product.price <= 100000) return false;
+
+    // 3. Search query filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       const matchName = product.name.toLowerCase().includes(query);
@@ -192,13 +225,21 @@ export default function App() {
     ? products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 5)
     : [];
 
+  const allCategories = ['All', ...Array.from(new Set(products.map((p) => p.category)))];
+  const activeSpotlight = spotlightProducts[spotlightIndex] || spotlightProducts[0];
+
   return (
     <>
       {/* Header section with sticky navbar */}
       <header className="app-header glass-card">
         <div className="logo-wrapper" onClick={() => { setSelectedCategory('All'); setIsCheckoutMode(false); }}>
-          <div className="logo-icon-glow">N</div>
-          <span className="logo-text glow-text">NEXUS // STORE</span>
+          <div className="logo-icon-glow">
+            <Icons.Headset size={20} />
+          </div>
+          <div className="logo-text-group">
+            <span className="logo-text glow-text">TECH STORE</span>
+            <span className="logo-subtext">PREMIUM ELECTRONICS & GADGETS</span>
+          </div>
         </div>
 
         {/* Search autocomplete widget */}
@@ -207,7 +248,7 @@ export default function App() {
             <Icons.Search size={18} className="text-muted" />
             <input 
               type="text" 
-              placeholder="Search gear, categories, specs..."
+              placeholder="Search laptops, RTX 5090 PCs, 8K TVs, AC, audio..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -240,7 +281,7 @@ export default function App() {
                   <img src={product.image} alt={product.name} className="dropdown-img" />
                   <div className="dropdown-info">
                     <span className="dropdown-title">{product.name}</span>
-                    <span className="dropdown-category">{product.category}</span>
+                    <span className="dropdown-category">{product.category} • {product.tag}</span>
                   </div>
                   <span className="dropdown-price">{formatINR(product.price)}</span>
                 </div>
@@ -248,7 +289,6 @@ export default function App() {
             </div>
           )}
 
-          {/* Close search dropdown when clicking outside */}
           {showSearchDropdown && (
             <div 
               style={{ position: 'fixed', inset: 0, zIndex: 100 }} 
@@ -275,7 +315,7 @@ export default function App() {
             }}
             title="Wishlist"
           >
-            <Icons.Heart fill={wishlist.length > 0 ? "var(--accent)" : "none"} size={20} />
+            <Icons.Heart fill={wishlist.length > 0 ? "#ef4444" : "none"} color={wishlist.length > 0 ? "#ef4444" : "currentColor"} size={20} />
             {wishlist.length > 0 && <span className="nav-btn-badge">{wishlist.length}</span>}
           </button>
 
@@ -309,7 +349,6 @@ export default function App() {
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         
         {isCheckoutMode ? (
-          // Checkout wizard mode
           <div style={{ marginTop: '20px' }}>
             <div style={{ marginBottom: '20px', textAlign: 'left' }}>
               <button className="btn btn-secondary" onClick={() => setIsCheckoutMode(false)}>
@@ -326,95 +365,207 @@ export default function App() {
             />
           </div>
         ) : (
-          // Standard shop mode
           <>
             {/* Hero banner promotion card */}
             <section className="hero-section glass-card">
               <div className="hero-grid">
                 <div className="hero-text">
-                  <span className="hero-tagline">Limited Edition Drop</span>
-                  <h1 className="hero-title glow-text">NEXUS FUTURE GEAR</h1>
+                  <div className="hero-deal-pill">
+                    <span className="live-badge">⚡ FLASH SALE</span>
+                    <span>Use Coupon <strong className="glow-text">TECH30</strong> for 30% OFF</span>
+                    <button className="copy-code-btn" onClick={handleCopyPromo}>
+                      {promoCopied ? 'Copied! ✓' : 'Copy'}
+                    </button>
+                  </div>
+                  
+                  <h1 className="hero-title glow-text">TECH STORE. ZERO COMPROMISE.</h1>
                   <p className="hero-desc">
-                    Immerse yourself in our premium line of high-performance devices, built with aerospace materials and custom silicon architecture. Use coupon <strong className="glow-text">NEXUS30</strong> at checkout for 30% off your order.
+                    Explore high-performance computing, spatial audio, OLED cinema, and smart climate electronics engineered with aerospace titanium and custom silicon architecture.
                   </p>
+                  
                   <div className="hero-stats">
                     <div className="stat-item">
-                      <span className="stat-val glow-text">22h</span>
-                      <span className="stat-lbl">Battery Life</span>
+                      <span className="stat-val glow-text">19</span>
+                      <span className="stat-lbl">Flagship Devices</span>
                     </div>
                     <div className="stat-item">
-                      <span className="stat-val glow-text">8K</span>
-                      <span className="stat-lbl">Micro-OLED</span>
+                      <span className="stat-val glow-text">2-Day</span>
+                      <span className="stat-lbl">Air Shipping</span>
                     </div>
                     <div className="stat-item">
-                      <span className="stat-val glow-text">200MP</span>
-                      <span className="stat-lbl">Ultra Optics</span>
+                      <span className="stat-val glow-text">2-Yr</span>
+                      <span className="stat-lbl">Full Warranty</span>
+                    </div>
+                    <div className="stat-item">
+                      <span className="stat-val glow-text">0%</span>
+                      <span className="stat-lbl">No-Cost EMI</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="hero-visual">
                   <div className="hero-glow-shape" />
-                  <div className="hero-showcase-card glass-card">
-                    <img src="/bladebook.jpg" alt="BladeBook Pro" />
-                    <div className="hero-card-title">BladeBook Pro M4</div>
-                    <div className="hero-card-price">Starting at {formatINR(159999)}</div>
+                  <div 
+                    className="hero-showcase-card glass-card"
+                    onClick={() => setActiveDetailProduct(activeSpotlight)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="spotlight-tag">{activeSpotlight.tag || 'Spotlight Gear'}</div>
+                    <img src={activeSpotlight.image} alt={activeSpotlight.name} />
+                    <div className="hero-card-title">{activeSpotlight.name}</div>
+                    <div className="hero-card-price">{formatINR(activeSpotlight.price)}</div>
+                    <div className="spotlight-dots">
+                      {spotlightProducts.map((_, idx) => (
+                        <span 
+                          key={idx} 
+                          className={`spotlight-dot ${idx === spotlightIndex ? 'active' : ''}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSpotlightIndex(idx);
+                          }}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
             </section>
 
-            {/* Category selection and Sorting toolbar */}
+            {/* Trust Badges Strip */}
+            <section className="trust-strip glass-card">
+              <div className="trust-item">
+                <span className="trust-icon">🚚</span>
+                <div>
+                  <strong>Free 2-Day Air Shipping</strong>
+                  <p>All-India Express Delivery</p>
+                </div>
+              </div>
+              <div className="trust-item">
+                <span className="trust-icon">🛡️</span>
+                <div>
+                  <strong>2-Year Tech Care</strong>
+                  <p>Zero Repair Cost Warranty</p>
+                </div>
+              </div>
+              <div className="trust-item">
+                <span className="trust-icon">⚡</span>
+                <div>
+                  <strong>Instant UPI & 0-EMI</strong>
+                  <p>Hassle-free digital payments</p>
+                </div>
+              </div>
+              <div className="trust-item">
+                <span className="trust-icon">🔄</span>
+                <div>
+                  <strong>14-Day Replacement</strong>
+                  <p>100% Guaranteed Satisfaction</p>
+                </div>
+              </div>
+            </section>
+
+            {/* Category selection bar with icons and counts */}
             <section className="filter-bar-container">
               <div className="category-pill-list">
-                {['All', ...Array.from(new Set(products.map((p) => p.category)))].map((cat) => (
-                  <button
-                    key={cat}
-                    className={`category-pill ${selectedCategory === cat ? 'active' : ''}`}
-                    onClick={() => setSelectedCategory(cat)}
-                  >
-                    {cat}
-                  </button>
-                ))}
+                {allCategories.map((cat) => {
+                  const count = cat === 'All' ? products.length : products.filter(p => p.category === cat).length;
+                  return (
+                    <button
+                      key={cat}
+                      className={`category-pill ${selectedCategory === cat ? 'active' : ''}`}
+                      onClick={() => setSelectedCategory(cat)}
+                    >
+                      <span className="cat-icon">{CATEGORY_ICONS[cat] || '📦'}</span>
+                      <span>{cat}</span>
+                      <span className="cat-count">{count}</span>
+                    </button>
+                  );
+                })}
                 {wishlist.length > 0 && (
                   <button
                     className={`category-pill ${selectedCategory === 'Wishlist' ? 'active' : ''}`}
                     onClick={() => setSelectedCategory('Wishlist')}
                   >
-                    Favorites ({wishlist.length})
+                    <span className="cat-icon">❤️</span>
+                    <span>Wishlist</span>
+                    <span className="cat-count">{wishlist.length}</span>
                   </button>
                 )}
               </div>
 
-              <div className="sort-select-wrapper">
-                <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                  <option value="featured">Featured / Standard</option>
-                  <option value="price-asc">Price: Low to High</option>
-                  <option value="price-desc">Price: High to Low</option>
-                  <option value="rating">Top Customer Rated</option>
-                </select>
+              {/* Price & Sort toolbar */}
+              <div className="toolbar-controls">
+                <div className="price-filter-group">
+                  <button 
+                    className={`filter-chip ${priceFilter === 'all' ? 'active' : ''}`}
+                    onClick={() => setPriceFilter('all')}
+                  >
+                    All Prices
+                  </button>
+                  <button 
+                    className={`filter-chip ${priceFilter === 'under30k' ? 'active' : ''}`}
+                    onClick={() => setPriceFilter('under30k')}
+                  >
+                    &lt; ₹30K
+                  </button>
+                  <button 
+                    className={`filter-chip ${priceFilter === '30k-100k' ? 'active' : ''}`}
+                    onClick={() => setPriceFilter('30k-100k')}
+                  >
+                    ₹30K - ₹1L
+                  </button>
+                  <button 
+                    className={`filter-chip ${priceFilter === 'above100k' ? 'active' : ''}`}
+                    onClick={() => setPriceFilter('above100k')}
+                  >
+                    &gt; ₹1L
+                  </button>
+                </div>
+
+                <div className="sort-select-wrapper">
+                  <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                    <option value="featured">Featured / Newest</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                    <option value="rating">Top Customer Rated</option>
+                  </select>
+                </div>
               </div>
             </section>
+
+            {/* Results Header */}
+            <div className="results-count-bar">
+              <span>Showing <strong>{sortedProducts.length}</strong> electronic devices</span>
+              {(searchQuery || selectedCategory !== 'All' || priceFilter !== 'all') && (
+                <button 
+                  className="btn-clear-filters"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSelectedCategory('All');
+                    setPriceFilter('all');
+                  }}
+                >
+                  Clear all filters ×
+                </button>
+              )}
+            </div>
 
             {/* Main Products Grid */}
             {sortedProducts.length === 0 ? (
               <div className="glass-card" style={{ padding: '60px', textAlign: 'center', margin: '40px 0' }}>
                 <Icons.Box size={48} className="text-muted" style={{ marginBottom: '16px' }} />
-                <h3>No items found</h3>
+                <h3>No electronic devices match your filter</h3>
                 <p style={{ color: 'var(--text-secondary)', marginTop: '8px' }}>
                   {selectedCategory === 'Wishlist' 
                     ? "You haven't added any products to your wishlist yet." 
-                    : "We couldn't find any products matching your criteria."}
+                    : "Try selecting another category or clearing your search filters."}
                 </p>
-                {(searchQuery || selectedCategory !== 'All') && (
-                  <button 
-                    className="btn btn-secondary" 
-                    style={{ marginTop: '16px' }}
-                    onClick={() => { setSearchQuery(''); setSelectedCategory('All'); }}
-                  >
-                    Reset Filters
-                  </button>
-                )}
+                <button 
+                  className="btn btn-secondary" 
+                  style={{ marginTop: '16px' }}
+                  onClick={() => { setSearchQuery(''); setSelectedCategory('All'); setPriceFilter('all'); }}
+                >
+                  Reset Filters
+                </button>
               </div>
             ) : (
               <section className="products-grid">
@@ -457,12 +608,12 @@ export default function App() {
             ))}
           </div>
           <button className="btn btn-primary btn-sm" onClick={() => setIsCompareOpen(true)}>
-            Compare Now
+            Compare Specs
           </button>
         </div>
       )}
 
-      {/* Cart sliding drawer drawer */}
+      {/* Cart sliding drawer */}
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
@@ -501,11 +652,12 @@ export default function App() {
 
       {/* Footer copyright */}
       <footer className="app-footer">
-        <div>© 2026 NEXUS Tech Inc. All rights reserved. Designed for premium futures.</div>
+        <div>© 2026 TECH STORE Inc. All rights reserved. Precision-engineered electronics.</div>
         <div className="footer-links">
           <a href="#" onClick={(e) => e.preventDefault()}>Privacy Policy</a>
           <a href="#" onClick={(e) => e.preventDefault()}>Terms of Service</a>
-          <a href="#" onClick={(e) => e.preventDefault()}>Secure Payments</a>
+          <a href="#" onClick={(e) => e.preventDefault()}>Warranty Support</a>
+          <a href="#" onClick={(e) => e.preventDefault()}>100% Secure Checkout</a>
         </div>
       </footer>
     </>
